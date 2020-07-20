@@ -1,8 +1,8 @@
 import React from "react";
-import "./App.css";
 import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import { CLARIFAI_KEY } from "./keys";
+import "./App.css";
 
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
@@ -32,8 +32,26 @@ class App extends React.Component {
         this.state = {
             input: "",
             imageUrl: "",
+            box: {},
         };
     }
+
+    calculateFaceLocation = data => {
+        const image = document.getElementById("inputImage");
+        const width = +image.width;
+        const height = +image.height;
+
+        return {
+            leftCol: data.left_col * width,
+            topRow: data.top_row * height,
+            rightCol: width - data.right_col * width,
+            bottomRow: height - data.bottom_row * height,
+        };
+    };
+
+    displayFaceBox = box => {
+        this.setState({ box });
+    };
 
     onInputChange = event => {
         this.setState({ input: event.target.value });
@@ -41,17 +59,15 @@ class App extends React.Component {
 
     onButtonSubmit = () => {
         this.setState({ imageUrl: this.state.input });
-        app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input).then(
-            function (response) {
-                console.log(
-                    response.outputs[0].data.regions[0].region_info.bounding_box
-                );
-                // do something with response
-            },
-            function (err) {
-                // there was an error
-            }
-        );
+        app.models
+            .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+            .then(resp => {
+                let boundBoxData =
+                    resp.outputs[0].data.regions[0].region_info.bounding_box;
+
+                this.displayFaceBox(this.calculateFaceLocation(boundBoxData));
+            })
+            .catch(err => console.log(err));
     };
 
     render() {
@@ -65,7 +81,10 @@ class App extends React.Component {
                     onInputChange={this.onInputChange}
                     onButtonSubmit={this.onButtonSubmit}
                 />
-                <FaceRecognition imageUrl={this.state.imageUrl} />
+                <FaceRecognition
+                    box={this.state.box}
+                    imageUrl={this.state.imageUrl}
+                />
             </div>
         );
     }
