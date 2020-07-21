@@ -3,8 +3,8 @@ import React from "react";
 const Signin = ({ onRouteChange }) => {
     return (
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-4 center">
-            <main className="pa4 black-80">
-                <form className="measure center">
+            <main className="pa4 black-80 ">
+                <div className="measure center">
                     <fieldset
                         id="sign_up"
                         className="ba b--transparent ph0 mh0"
@@ -13,7 +13,7 @@ const Signin = ({ onRouteChange }) => {
                         <div className="mt3">
                             <label
                                 className="db fw6 lh-copy f6"
-                                for="email-address"
+                                htmlFor="email-address"
                             >
                                 Email
                             </label>
@@ -25,7 +25,10 @@ const Signin = ({ onRouteChange }) => {
                             />
                         </div>
                         <div className="mv3">
-                            <label className="db fw6 lh-copy f6" for="password">
+                            <label
+                                className="db fw6 lh-copy f6"
+                                htmlFor="password"
+                            >
                                 Password
                             </label>
                             <input
@@ -52,7 +55,7 @@ const Signin = ({ onRouteChange }) => {
                             Register
                         </p>
                     </div>
-                </form>
+                </div>
             </main>
         </article>
     );
