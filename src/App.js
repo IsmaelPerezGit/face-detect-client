@@ -109,7 +109,8 @@ class App extends React.Component {
                                 ...this.state.user,
                                 entries: count,
                             });
-                        });
+                        })
+                        .catch(err => console.log(err));
                 }
                 let boundBoxData =
                     resp.outputs[0].data.regions[0].region_info.bounding_box;
