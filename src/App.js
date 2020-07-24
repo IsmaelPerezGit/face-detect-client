@@ -87,16 +87,14 @@ class App extends React.Component {
 
     onButtonSubmit = () => {
         this.setState({ imageUrl: this.state.input });
-        fetch("https://glacial-escarpment-55461.herokuapp.com/imageurl", {
+        fetch("https://glacial-escarpment-55461.herokuapp.com/imageUrl", {
             method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 input: this.state.input,
             }),
         })
-            .then(response => {
-                response.json();
-            })
+            .then(response => response.json())
             .then(response => {
                 if (response) {
                     fetch(
@@ -109,16 +107,15 @@ class App extends React.Component {
                             }),
                         }
                     )
-                        .then(response => {
-                            response.json();
-                        })
+                        .then(response => response.json())
                         .then(count => {
-                            this.setState({
-                                ...this.state.user,
-                                entries: count,
-                            });
+                            this.setState(
+                                Object.assign(this.state.user, {
+                                    entries: count,
+                                })
+                            );
                         })
-                        .catch(err => console.log(err));
+                        .catch(console.log);
                 }
                 this.displayFaceBox(this.calculateFaceLocation(response));
             })
