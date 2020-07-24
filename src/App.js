@@ -147,7 +147,7 @@ class App extends React.Component {
                     onRouteChange={this.onRouteChange}
                 />
                 {route === "home" ? (
-                    <>
+                    <div>
                         <Logo />
                         <Rank
                             name={this.state.user.name}
@@ -158,7 +158,7 @@ class App extends React.Component {
                             onButtonSubmit={this.onButtonSubmit}
                         />
                         <FaceRecognition box={box} imageUrl={imageUrl} />
-                    </>
+                    </div>
                 ) : route === "signin" ? (
                     <Signin
                         loadUser={this.loadUser}
