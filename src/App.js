@@ -69,15 +69,16 @@ class App extends React.Component {
     };
 
     calculateFaceLocation = data => {
+        const clarifaiFace =
+            data.outputs[0].data.regions[0].region_info.bounding_box;
         const image = document.getElementById("inputImage");
-        const width = +image.width;
-        const height = +image.height;
-
+        const width = Number(image.width);
+        const height = Number(image.height);
         return {
-            leftCol: data.left_col * width,
-            topRow: data.top_row * height,
-            rightCol: width - data.right_col * width,
-            bottomRow: height - data.bottom_row * height,
+            leftCol: clarifaiFace.left_col * width,
+            topRow: clarifaiFace.top_row * height,
+            rightCol: width - clarifaiFace.right_col * width,
+            bottomRow: height - clarifaiFace.bottom_row * height,
         };
     };
 
@@ -119,11 +120,7 @@ class App extends React.Component {
                         })
                         .catch(err => console.log(err));
                 }
-                let boundBoxData =
-                    response.outputs[0].data.regions[0].region_info
-                        .bounding_box;
-
-                this.displayFaceBox(this.calculateFaceLocation(boundBoxData));
+                this.displayFaceBox(this.calculateFaceLocation(response));
             })
             .catch(err => console.log(err));
     };
