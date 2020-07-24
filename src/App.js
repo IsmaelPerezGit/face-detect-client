@@ -69,18 +69,15 @@ class App extends React.Component {
     };
 
     calculateFaceLocation = data => {
-        console.log("DATA", data);
-        const clarifaiFace =
-            data.outputs[0].data.regions[0].region_info.bounding_box;
         const image = document.getElementById("inputImage");
         const width = +image.width;
         const height = +image.height;
 
         return {
-            leftCol: clarifaiFace.left_col * width,
-            topRow: clarifaiFace.top_row * height,
-            rightCol: width - clarifaiFace.right_col * width,
-            bottomRow: height - clarifaiFace.bottom_row * height,
+            leftCol: data.left_col * width,
+            topRow: data.top_row * height,
+            rightCol: width - data.right_col * width,
+            bottomRow: height - data.bottom_row * height,
         };
     };
 
@@ -89,14 +86,16 @@ class App extends React.Component {
 
     onButtonSubmit = () => {
         this.setState({ imageUrl: this.state.input });
-        fetch("http://glacial-escarpment-55461.herokuapp.com/imageurl", {
+        fetch("https://glacial-escarpment-55461.herokuapp.com/imageurl", {
             method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 input: this.state.input,
             }),
         })
-            .then(response => response.json())
+            .then(response => {
+                response.json();
+            })
             .then(response => {
                 if (response) {
                     fetch(
@@ -109,7 +108,9 @@ class App extends React.Component {
                             }),
                         }
                     )
-                        .then(response => response.json())
+                        .then(response => {
+                            response.json();
+                        })
                         .then(count => {
                             this.setState({
                                 ...this.state.user,
@@ -118,7 +119,11 @@ class App extends React.Component {
                         })
                         .catch(err => console.log(err));
                 }
-                this.displayFaceBox(this.calculateFaceLocation(response));
+                let boundBoxData =
+                    response.outputs[0].data.regions[0].region_info
+                        .bounding_box;
+
+                this.displayFaceBox(this.calculateFaceLocation(boundBoxData));
             })
             .catch(err => console.log(err));
     };
